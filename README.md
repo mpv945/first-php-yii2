@@ -22,7 +22,7 @@
     2. "php.executablePath": "D:/soft/php-7.3.0-nts-Win32-VC15-x64/php.exe"
   3. 点击debug图标ctrl+shift+D 打开debug 。如果没有设置过，设置图标按钮上会有个红点。点击。根据提示选择php。会自动生成launch.json 文件。默认配置就好
 # php 环境配置
-  1. php-cgi -b 127.0.0.1:9003 -c C:\php\php.ini （9000端口好像不能被nginx发现）ctrl+c关闭;-c C:\php\php.ini不加也行。默认就是，如果有特殊配置请加
+  1. php-cgi -b 127.0.0.1:9003 -c C:\php\php.ini （9000端口好像不能被nginx发现）ctrl+c关闭;-c C:\php\php.ini不加也行。默认就是，如果有特殊配置请加;(强制关闭：taskkill /F /IM php-cgi.exe > nul)
   2. 下载nginx http://nginx.org/en/download.html ，解压到目录。cd 进入该目录下。对于无法关闭nginx时，可以执行taskkill /fi "imagename eq nginx.EXE" /f强行关闭。本项目start.bat用来启动php和nginx的脚步，stop反之；
     1. 修改nginx 目录下的conf目录编辑nginx.conf 做以下配置修改
       a. 找到location / { 把下面的root   html;修改为root   D:/workspace/vscode;   （如果php项目包含除php之外文件
@@ -34,7 +34,11 @@
             fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
             include        fastcgi_params;
         }
-  3. 切换到nginx解压迷路运行，nginx常用命令：start nginx.exe 可以后台运行nginx，不加start表示直接执行。 nginx.exe -s reload 重新加载配置;nginx.exe -s stop  //暂停;nginx.exe -s quit   //退出nginx
+  3. 切换到nginx解压迷路运行，nginx常用命令：start nginx.exe 可以后台运行nginx。 nginx.exe -s reload 重新加载配置;nginx.exe -s stop  //暂停;nginx.exe -s quit   //退出nginx；（强制关闭nginx：taskkill /F /IM nginx.exe > nul）
 # 调式
   启动nginx.exe  ,然后启动php-cgi -b 127.0.0.1:9003 ，最后打开vscode的dubug。访问http://localhost/first-php-yii2/test.php就能调试debug了
+  关于windows下端口监听查看：netstat -ano | findstr "8001"    查看端口8001被哪个进程占用；由下图可以看出，被进程为3736的占用
+  通过进程号查看进程 命令：tasklist | findstr "3736" 查看进程号为3736对应的进程
+  结束该进程  taskkill /f /t /im java.exe
+
 
