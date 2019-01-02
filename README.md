@@ -6,7 +6,7 @@
   2. 解压zip到目录，增加一个path路径为php的，把php.ini-* 修改一个成php.ini
   3. 下载xdebug 插件模块https://xdebug.org/docs/install；win版本在https://xdebug.org/download.php；下载对应的版本dll，放在D:\soft\php-7.3.0-nts-Win32-VC15-x64\ext目录下
     1.在php.ini增加调试
-    extension_dir = "ext"（搜索这个，并删除前面;符号的注解）
+    extension_dir = "ext"（搜索这个，并删除前面;符号的注解；如果目录不是C:\php 需要放开注释）
     zend_extension=php_xdebug-2.7.0beta1-7.3-vc15-nts-x86_64.dll（dll文件名称）
     [XDebug]
     如果启用远程调试添加如下的
@@ -41,4 +41,26 @@
   通过进程号查看进程 命令：tasklist | findstr "3736" 查看进程号为3736对应的进程
   结束该进程  taskkill /f /t /im java.exe
 
+# 安装yii2
+  1. 安装教程https://getcomposer.org/download/ 通过过composer，我们可以使用大量的第三方库，而无需自己造轮子。linux和mac安装curl -sS https://getcomposer.org/installer | php 然后复制sudo mv composer.phar /usr/local/bin/composer
+    命令安装：切换到php的根目录，修改php.ini 搜索"ext"去掉前面的; 搜索openssl 注释前面的;mbstring 模块也放开
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    php -r "if (hash_file('sha384', 'composer-setup.php') === '93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    php composer-setup.php
+    php -r "unlink('composer-setup.php');"
+    操作执行结束，会在当前目录下生成composer.phar文件。在Linux里，composer.phar是可执行程序。我们可以使用php composer.phar update执行更新操作。
+  2. （也可以不加 使用 php composer.phar -v）添加composer命令。安装完新增composer.bat文件 添加@php "%~dp0composer.phar" %*最后保存；composer -V 查看版本；-h帮助文档（也可composer command --help） -v详细信息；composer self-update 更新composer到最新版本；具体参考https://docs.phpcomposer.com/03-cli.html
+    1. 安装包 具体参考https://www.cnblogs.com/52fhy/p/5246013.html
+    中国镜像配置[composer config]/[php composer.phar config] -g repo.packagist composer https://packagist.phpcomposer.com g表示全局
+    指定版本 composer require monolog/monolog修改为composer require "monolog/monolog:1.2.*"（>，>=，<，<=，!=，~,-, ||）  composer update monolog/monolog
+    移除某个包composer remove monolog/monolog 加-vvv可以输出详细信息
+    搜索 php composer.phar search -name  完全匹配
+    创建项目 php composer.phar create-project doctrine/orm path 2.2.* --repository-url: 提供一个自定义的储存库来搜索包，这将被用来代替 packagist.org
+  3. 安装Yii（composer 可以跨目录，）官网https://www.yiiframework.com/doc/guide/2.0/zh-cn/start-installation
+    可选：安装完 Composer，如果需要指定Asset版本运行下面的命令来安装 Composer Asset 插件php composer.phar global require "fxp/composer-asset-plugin:^1.2.0"
+    国内最好切换源composer config -g repo.packagist composer https://packagist.phpcomposer.com   不然可能会造成安装失败
+    安装基本的应用程序模板composer create-project [--prefer-dist --stability=dev] yiisoft/yii2-app-basic basic 或者高级版php composer.phar create-project yiisoft/yii2-app-advanced first-yii2-app（项目路径或者名称（就是当前目录））
+    进入项目目录first-yii2-app 执行.\init 会提示选择开发还是生产。根据序号输入回车，然后有提示选择yes。最后初始化完成。
+    win下执行.\yii.bat serve --docroot="frontend/web/" （linux 环境验证安装（内置PHP Web服务器）php yii serve 或者 php yii serve --port=8888） 浏览器http://localhost:8080/
 
+# vscode安装yii2 插件
